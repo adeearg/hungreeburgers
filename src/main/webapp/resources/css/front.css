@@ -1,0 +1,100 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Jan 16, 2014, 9:50:58 AM
+    Author     : alex
+*/
+
+body {
+/*    background-color: #555555;*/
+/*    background-color: #9BCC60;*/
+    background-color: #343434;
+}
+
+.ui-button {
+    background: linear-gradient(#99A699, #778877) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+.productBox {
+/*    width: 27%;
+    float: left;*/
+    text-align: center;
+}
+
+.productLabelText {
+    line-height: 150%;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.productImage {
+    height: 120px;
+    width: auto;
+}
+
+table {
+    margin: 0px auto;
+}
+
+.noBorders tr, .noBorders td {
+    border: none !important;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.qty {
+    text-align: right;
+}
+
+.confCust {
+    font-weight: bolder;
+}
+
+.colProdConfirm {
+    text-align: left;
+    width: 300px;
+}
+
+.colProd {
+    text-align: left;
+    width: 12em;
+}
+
+.colQty {
+    text-align: right;
+    width: 1em;
+}
+
+.colPrice {
+    text-align: right;
+    width: 6em;
+}
+
+.ui-layout-unit, .ui-panel {
+/*    border-color: #9BCC60;*/
+/*    border-color: #343434;*/
+}
+/*
+.ui-layout-unit {
+    border: none;
+}
+*/
+.ui-panel .ui-panel-title {
+/*    color: #9BCC60;*/
+    font-size: 1.3em;
+    font-weight: bolder;
+    margin: 0;
+}
+
+.ui-clock {
+    background: none;
+    border: none;
+    text-transform: none;
+}
+
+#cartLeft_content {
+    padding: 1em 0em;
+}

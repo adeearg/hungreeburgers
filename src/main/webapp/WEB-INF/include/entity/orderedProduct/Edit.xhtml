@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="OrderedProductEditDlg" widgetVar="OrderedProductEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditOrderedProductTitle}" closeOnEscape="true">
+
+            <h:form id="OrderedProductEditForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid  columns="2" rendered="#{orderedProductController.selected != null}">
+
+                        <p:outputLabel value="#{bundle.EditOrderedProductLabel_qty}" for="qty" />
+                        <p:inputText id="qty" value="#{orderedProductController.selected.qty}" title="#{bundle.EditOrderedProductTitle_qty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_qty}"/>
+
+                        <p:outputLabel value="#{bundle.EditOrderedProductLabel_eggQty}" for="eggQty" />
+                        <p:inputText id="eggQty" value="#{orderedProductController.selected.eggQty}" title="#{bundle.EditOrderedProductTitle_eggQty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_eggQty}"/>
+
+                        <p:outputLabel value="#{bundle.EditOrderedProductLabel_cheeseQty}" for="cheeseQty" />
+                        <p:inputText id="cheeseQty" value="#{orderedProductController.selected.cheeseQty}" title="#{bundle.EditOrderedProductTitle_cheeseQty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_cheeseQty}"/>
+
+                        <p:outputLabel value="#{bundle.EditOrderedProductLabel_eggCheeseQty}" for="eggCheeseQty" />
+                        <p:inputText id="eggCheeseQty" value="#{orderedProductController.selected.eggCheeseQty}" title="#{bundle.EditOrderedProductTitle_eggCheeseQty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_eggCheeseQty}"/>
+
+                        <h:outputLabel value="#{bundle.EditOrderedProductLabel_product}" for="product" />
+                        <h:outputText id="product" value="#{orderedProductController.selected.product}" />
+
+                        <h:outputLabel value="#{bundle.EditOrderedProductLabel_customerOrder}" for="customerOrder" />
+                        <h:outputText id="customerOrder" value="#{orderedProductController.selected.customerOrder}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{orderedProductController.save}" value="#{bundle.Save}" update="display,:OrderedProductListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,OrderedProductEditDialog);"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="OrderedProductEditDialog.hide()"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="OrderedProductListForm">
+
+        <p:panel header="#{bundle.ListOrderedProductTitle}">
+
+            <p:dataTable id="datalist" value="#{orderedProductController.items}" var="item"
+                         selectionMode="single" selection="#{orderedProductController.selected}"
+                         rowKey="#{item.orderedProductPK}"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30"
+                         >
+
+                <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                <p:column sortBy="#{item.qty}" filterBy="#{item.qty}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListOrderedProductTitle_qty}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.qty}"/>
+                </p:column>
+                <p:column sortBy="#{item.eggQty}" filterBy="#{item.eggQty}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListOrderedProductTitle_eggQty}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.eggQty}"/>
+                </p:column>
+                <p:column sortBy="#{item.cheeseQty}" filterBy="#{item.cheeseQty}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListOrderedProductTitle_cheeseQty}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.cheeseQty}"/>
+                </p:column>
+                <p:column sortBy="#{item.eggCheeseQty}" filterBy="#{item.eggCheeseQty}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListOrderedProductTitle_eggCheeseQty}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.eggCheeseQty}"/>
+                </p:column>
+                <p:column sortBy="#{item.product.name}" filterBy="#{item.product.name}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListOrderedProductTitle_product}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.product.name}"/>
+                </p:column>
+                <p:column sortBy="#{item.customerOrder.id}" filterBy="#{item.customerOrder.id}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListOrderedProductTitle_customerOrder}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.customerOrder.id}"/>
+                </p:column>
+                <f:facet name="footer">
+                    <div class="footer-section">
+                        <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{orderedProductController.prepareCreate}" update=":OrderedProductCreateForm" oncomplete="OrderedProductCreateDialog.show()"/>
+                        <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":OrderedProductViewForm" oncomplete="OrderedProductViewDialog.show()" disabled="#{empty orderedProductController.selected}"/>
+                        <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":OrderedProductEditForm" oncomplete="OrderedProductEditDialog.show()" disabled="#{empty orderedProductController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{orderedProductController.delete}" update=":growl,datalist" disabled="#{empty orderedProductController.selected}"/>
+                    </div>
+                </f:facet>
+
+            </p:dataTable>
+
+        </p:panel>
+
+    </h:form>
+
+</ui:composition>

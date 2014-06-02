@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="CustomerListForm">
+
+        <p:panel header="#{bundle.ListCustomerTitle}">
+
+            <p:dataTable id="datalist" value="#{customerController.items}" var="item"
+                         selectionMode="single" selection="#{customerController.selected}"
+                         rowKey="#{item.id}"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30"
+                         >
+
+                <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                <p:column sortBy="#{item.id}" filterBy="#{item.id}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_id}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.id}"/>
+                </p:column>
+                <p:column sortBy="#{item.nick}" filterBy="#{item.nick}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_nick}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.nick}"/>
+                </p:column>
+                <p:column sortBy="#{item.firstName}" filterBy="#{item.firstName}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_firstName}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.firstName}"/>
+                </p:column>
+                <p:column sortBy="#{item.lastName}" filterBy="#{item.lastName}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_lastName}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.lastName}"/>
+                </p:column>
+                <p:column sortBy="#{item.email}" filterBy="#{item.email}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_email}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.email}"/>
+                </p:column>
+                <p:column sortBy="#{item.phone}" filterBy="#{item.phone}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_phone}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.phone}"/>
+                </p:column>
+                <p:column sortBy="#{item.address1}" filterBy="#{item.address1}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_address1}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.address1}"/>
+                </p:column>
+                <p:column sortBy="#{item.address2}" filterBy="#{item.address2}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_address2}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.address2}"/>
+                </p:column>
+                <p:column sortBy="#{item.ccNumber}" filterBy="#{item.ccNumber}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerTitle_ccNumber}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.ccNumber}"/>
+                </p:column>
+                <f:facet name="footer">
+                    <div class="footer-section">
+                        <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{customerController.prepareCreate}" update=":CustomerCreateForm" oncomplete="CustomerCreateDialog.show()"/>
+                        <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":CustomerViewForm" oncomplete="CustomerViewDialog.show()" disabled="#{empty customerController.selected}"/>
+                        <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":CustomerEditForm" oncomplete="CustomerEditDialog.show()" disabled="#{empty customerController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{customerController.delete}" update=":growl,datalist" disabled="#{empty customerController.selected}"/>
+                    </div>
+                </f:facet>
+
+            </p:dataTable>
+
+        </p:panel>
+
+    </h:form>
+
+</ui:composition>

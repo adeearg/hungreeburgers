@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CustomerOrderCreateDlg" widgetVar="CustomerOrderCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateCustomerOrderTitle}" closeOnEscape="true">
+
+            <h:form id="CustomerOrderCreateForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2">
+
+                        <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_amount}" for="amount" />
+                        <p:inputText id="amount" value="#{customerOrderController.selected.amount}" title="#{bundle.CreateCustomerOrderTitle_amount}" required="true" requiredMessage="#{bundle.CreateCustomerOrderRequiredMessage_amount}"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_dateCreated}" for="dateCreated" />
+                        <p:calendar id="dateCreated" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateCreated}" title="#{bundle.EditCustomerOrderTitle_dateCreated}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_dateCreated}" showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_confirmationNumber}" for="confirmationNumber" />
+                        <p:inputText id="confirmationNumber" value="#{customerOrderController.selected.confirmationNumber}" title="#{bundle.CreateCustomerOrderTitle_confirmationNumber}" required="true" requiredMessage="#{bundle.CreateCustomerOrderRequiredMessage_confirmationNumber}"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_dateDelivered}" for="dateDelivered" />
+                        <p:calendar id="dateDelivered" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateDelivered}" title="#{bundle.EditCustomerOrderTitle_dateDelivered}"  showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_dateReceived}" for="dateReceived" />
+                        <p:calendar id="dateReceived" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateReceived}" title="#{bundle.EditCustomerOrderTitle_dateReceived}"  showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_customerId}" for="customerId" />
+                        <p:selectOneMenu id="customerId" value="#{customerOrderController.selected.customerId}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_customerId}" converter="customerConverter">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{customerController.items}"
+                                           var="customerIdItem"
+                                           itemValue="#{customerIdItem}"
+                                           itemLabel="#{customerIdItem.id.toString()}"
+                                           />
+
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{customerOrderController.saveNew}" value="#{bundle.Save}" update="display,:CustomerOrderListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,CustomerOrderCreateDialog);"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CustomerOrderCreateDialog.hide()"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

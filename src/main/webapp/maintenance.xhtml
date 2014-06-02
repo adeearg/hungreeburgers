@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="WEB-INF/include/template_maintenance.xhtml">
+
+    <ui:define name="title">
+        <h:outputText value="HUNGREE BURGERS Files Maintenance"/>
+    </ui:define>
+
+    <ui:define id="admin" name="body">
+        <h:outputStylesheet library="css" name="admin.css"/>
+        <p:tabView id="adminTabView" style="height: 2.7em;">
+            <p:tab id="customersTab" title="Customers Table">
+                <h:form id="CustomerListForm">
+
+                    <p:panel id="customersPanel" header="#{bundle.ListCustomerTitle}">
+
+                        <p:dataTable id="datalist" value="#{customerController.items}" var="item"
+                                     selectionMode="single" selection="#{customerController.selected}"
+                                     rowKey="#{item.id}"
+                                     paginator="true"
+                                     rows="20"
+                                     rowsPerPageTemplate="10,20,30"
+                                     >
+
+                            <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                            <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                            <p:column sortBy="#{item.id}" filterBy="#{item.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_id}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.nick}" filterBy="#{item.nick}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_nick}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nick}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.firstName}" filterBy="#{item.firstName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_firstName}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.firstName}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.lastName}" filterBy="#{item.lastName}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_lastName}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.lastName}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.email}" filterBy="#{item.email}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_email}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.email}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.phone}" filterBy="#{item.phone}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_phone}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.phone}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.address1}" filterBy="#{item.address1}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_address1}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.address1}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.address2}" filterBy="#{item.address2}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_address2}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.address2}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.ccNumber}" filterBy="#{item.ccNumber}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerTitle_ccNumber}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.ccNumber}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:outputPanel styleClass="footer-section">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{customerController.prepareCreate}" update=":adminTabView:CustomerCreateForm" oncomplete="CustomerCreateDialog.show()"/>
+                                    <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":adminTabView:CustomerViewForm" oncomplete="CustomerViewDialog.show()" disabled="#{empty customerController.selected}"/>
+                                    <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":adminTabView:CustomerEditForm" oncomplete="CustomerEditDialog.show()" disabled="#{empty customerController.selected}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{customerController.delete}" update=":growl,datalist" disabled="#{empty customerController.selected}"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                        </p:dataTable>
+
+                    </p:panel>
+
+                </h:form>
+
+
+                <p:dialog id="CustomerViewDlg" widgetVar="CustomerViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewCustomerTitle}" closeOnEscape="true">
+
+                    <h:form id="CustomerViewForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2" rendered="#{customerController.selected != null}">
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_id}"/>
+                                <h:outputText value="#{customerController.selected.id}" title="#{bundle.ViewCustomerTitle_id}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_nick}"/>
+                                <h:outputText value="#{customerController.selected.nick}" title="#{bundle.ViewCustomerTitle_nick}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_firstName}"/>
+                                <h:outputText value="#{customerController.selected.firstName}" title="#{bundle.ViewCustomerTitle_firstName}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_lastName}"/>
+                                <h:outputText value="#{customerController.selected.lastName}" title="#{bundle.ViewCustomerTitle_lastName}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_email}"/>
+                                <h:outputText value="#{customerController.selected.email}" title="#{bundle.ViewCustomerTitle_email}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_phone}"/>
+                                <h:outputText value="#{customerController.selected.phone}" title="#{bundle.ViewCustomerTitle_phone}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_address1}"/>
+                                <h:outputText value="#{customerController.selected.address1}" title="#{bundle.ViewCustomerTitle_address1}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_address2}"/>
+                                <h:outputText value="#{customerController.selected.address2}" title="#{bundle.ViewCustomerTitle_address2}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerLabel_ccNumber}"/>
+                                <h:outputText value="#{customerController.selected.ccNumber}" title="#{bundle.ViewCustomerTitle_ccNumber}"/>
+                            </p:panelGrid>
+                            <p:commandButton value="#{bundle.Close}" onclick="CustomerViewDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+
+
+                <p:dialog id="CustomerEditDlg" widgetVar="CustomerEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditCustomerTitle}" closeOnEscape="true">
+
+                    <h:form id="CustomerEditForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid  columns="2" rendered="#{customerController.selected != null}">
+
+                                <h:outputLabel value="#{bundle.EditCustomerLabel_id}" for="id" />
+                                <h:outputText id="id" value="#{customerController.selected.id}" />
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_nick}" for="nick" />
+                                <p:inputText id="nick" value="#{customerController.selected.nick}" title="#{bundle.EditCustomerTitle_nick}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_nick}" size="10" maxlength="10"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_firstName}" for="firstName" />
+                                <p:inputText id="firstName" value="#{customerController.selected.firstName}" title="#{bundle.EditCustomerTitle_firstName}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_firstName}" size="25" maxlength="25"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_lastName}" for="lastName" />
+                                <p:inputText id="lastName" value="#{customerController.selected.lastName}" title="#{bundle.EditCustomerTitle_lastName}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_lastName}" size="25" maxlength="25"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_email}" for="email" />
+                                <p:inputText id="email" value="#{customerController.selected.email}" title="#{bundle.EditCustomerTitle_email}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_email}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_phone}" for="phone" />
+                                <p:inputText id="phone" value="#{customerController.selected.phone}" title="#{bundle.EditCustomerTitle_phone}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_phone}" size="20" maxlength="20"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_address1}" for="address1" />
+                                <p:inputText id="address1" value="#{customerController.selected.address1}" title="#{bundle.EditCustomerTitle_address1}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_address1}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_address2}" for="address2" />
+                                <p:inputText id="address2" value="#{customerController.selected.address2}" title="#{bundle.EditCustomerTitle_address2}" required="true" requiredMessage="#{bundle.EditCustomerRequiredMessage_address2}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerLabel_ccNumber}" for="ccNumber" />
+                                <p:inputText id="ccNumber" value="#{customerController.selected.ccNumber}" title="#{bundle.EditCustomerTitle_ccNumber}" size="19" maxlength="19"/>
+                            </p:panelGrid>
+                            <!--                                <p:commandButton actionListener="{customerController.save}" value="{bundle.Save}" update="display,:adminTabView:CustomerListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,CustomerEditDialog);"/>-->
+                            <p:commandButton actionListener="#{customerController.save}" value="#{bundle.Save}" update="display,:adminTabView:CustomerListForm:datalist,:growl" oncomplete="CustomerEditDialog.hide()"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="CustomerEditDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+
+
+                <p:dialog id="CustomerCreateDlg" widgetVar="CustomerCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateCustomerTitle}" closeOnEscape="true">
+
+                    <h:form id="CustomerCreateForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2">
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_nick}" for="nick" />
+                                <p:inputText id="nick" value="#{customerController.selected.nick}" title="#{bundle.CreateCustomerTitle_nick}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_nick}" size="10" maxlength="10"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_firstName}" for="firstName" />
+                                <p:inputText id="firstName" value="#{customerController.selected.firstName}" title="#{bundle.CreateCustomerTitle_firstName}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_firstName}" size="25" maxlength="25"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_lastName}" for="lastName" />
+                                <p:inputText id="lastName" value="#{customerController.selected.lastName}" title="#{bundle.CreateCustomerTitle_lastName}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_lastName}" size="25" maxlength="25"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_email}" for="email" />
+                                <p:inputText id="email" value="#{customerController.selected.email}" title="#{bundle.CreateCustomerTitle_email}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_email}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_phone}" for="phone" />
+                                <p:inputText id="phone" value="#{customerController.selected.phone}" title="#{bundle.CreateCustomerTitle_phone}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_phone}" size="20" maxlength="20"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_address1}" for="address1" />
+                                <p:inputText id="address1" value="#{customerController.selected.address1}" title="#{bundle.CreateCustomerTitle_address1}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_address1}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_address2}" for="address2" />
+                                <p:inputText id="address2" value="#{customerController.selected.address2}" title="#{bundle.CreateCustomerTitle_address2}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_address2}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerLabel_ccNumber}" for="ccNumber" />
+                                <p:inputText id="ccNumber" value="#{customerController.selected.ccNumber}" title="#{bundle.CreateCustomerTitle_ccNumber}" size="19" maxlength="19"/>
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{customerController.saveNew}" value="#{bundle.Save}" update="@all" oncomplete="handleSubmit(xhr,status,args,CustomerCreateDialog);"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="CustomerCreateDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+
+            </p:tab>
+            <p:tab id="CustomerOrdersTab" title="Customer Orders Table">
+                <h:form id="CustomerOrderListForm">
+
+                    <p:panel id="CustomerOrderPanel" header="#{bundle.ListCustomerOrderTitle}">
+
+                        <p:dataTable id="datalist" value="#{customerOrderController.items}" var="item"
+                                     selectionMode="single" selection="#{customerOrderController.selected}"
+                                     rowKey="#{item.id}"
+                                     paginator="true"
+                                     rows="20"
+                                     rowsPerPageTemplate="10,20,30"
+                                     >
+
+                            <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                            <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                            <p:column sortBy="#{item.id}" filterBy="#{item.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_id}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.amount}" filterBy="#{item.amount}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_amount}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.amount}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.dateCreated}" filterBy="#{item.dateCreated}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_dateCreated}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateCreated}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.confirmationNumber}" filterBy="#{item.confirmationNumber}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_confirmationNumber}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.confirmationNumber}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.dateDelivered}" filterBy="#{item.dateDelivered}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_dateDelivered}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateDelivered}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.dateReceived}" filterBy="#{item.dateReceived}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_dateReceived}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateReceived}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.customerId.id}" filterBy="#{item.customerId.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListCustomerOrderTitle_customerId}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.customerId.id}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:outputPanel styleClass="footer-section">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{customerOrderController.prepareCreate}" update=":adminTabView:CustomerOrderCreateForm" oncomplete="CustomerOrderCreateDialog.show()"/>
+                                    <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":adminTabView:CustomerOrderViewForm" oncomplete="CustomerOrderViewDialog.show()" disabled="#{empty customerOrderController.selected}"/>
+                                    <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":adminTabView:CustomerOrderEditForm" oncomplete="CustomerOrderEditDialog.show()" disabled="#{empty customerOrderController.selected}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{customerOrderController.delete}" update=":growl,datalist" disabled="#{empty customerOrderController.selected}"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                        </p:dataTable>
+
+                    </p:panel>
+
+                </h:form>
+                <p:dialog id="CustomerOrderViewDlg" widgetVar="CustomerOrderViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewCustomerOrderTitle}" closeOnEscape="true">
+
+                    <h:form id="CustomerOrderViewForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2" rendered="#{customerOrderController.selected != null}">
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_id}"/>
+                                <h:outputText value="#{customerOrderController.selected.id}" title="#{bundle.ViewCustomerOrderTitle_id}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_amount}"/>
+                                <h:outputText value="#{customerOrderController.selected.amount}" title="#{bundle.ViewCustomerOrderTitle_amount}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_dateCreated}"/>
+                                <h:outputText value="#{customerOrderController.selected.dateCreated}" title="#{bundle.ViewCustomerOrderTitle_dateCreated}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_confirmationNumber}"/>
+                                <h:outputText value="#{customerOrderController.selected.confirmationNumber}" title="#{bundle.ViewCustomerOrderTitle_confirmationNumber}"/>
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_dateDelivered}"/>
+                                <h:outputText value="#{customerOrderController.selected.dateDelivered}" title="#{bundle.ViewCustomerOrderTitle_dateDelivered}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_dateReceived}"/>
+                                <h:outputText value="#{customerOrderController.selected.dateReceived}" title="#{bundle.ViewCustomerOrderTitle_dateReceived}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+
+                                <h:outputText value="#{bundle.ViewCustomerOrderLabel_customerId}"/>
+                                <h:outputText value="#{customerOrderController.selected.customerId.id}"/>
+                            </p:panelGrid>
+                            <p:commandButton value="#{bundle.Close}" onclick="CustomerOrderViewDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="CustomerOrderEditDlg" widgetVar="CustomerOrderEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditCustomerOrderTitle}" closeOnEscape="true">
+
+                    <h:form id="CustomerOrderEditForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid  columns="2" rendered="#{customerOrderController.selected != null}">
+
+                                <h:outputLabel value="#{bundle.EditCustomerOrderLabel_id}" for="id" />
+                                <h:outputText id="id" value="#{customerOrderController.selected.id}" />
+
+                                <p:outputLabel value="#{bundle.EditCustomerOrderLabel_amount}" for="amount" />
+                                <p:inputText id="amount" value="#{customerOrderController.selected.amount}" title="#{bundle.EditCustomerOrderTitle_amount}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_amount}"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerOrderLabel_dateCreated}" for="dateCreated" />
+                                <p:calendar id="dateCreated" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateCreated}" title="#{bundle.EditCustomerOrderTitle_dateCreated}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_dateCreated}" showOn="button"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerOrderLabel_confirmationNumber}" for="confirmationNumber" />
+                                <p:inputText id="confirmationNumber" value="#{customerOrderController.selected.confirmationNumber}" title="#{bundle.EditCustomerOrderTitle_confirmationNumber}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_confirmationNumber}"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerOrderLabel_dateDelivered}" for="dateDelivered" />
+                                <p:calendar id="dateDelivered" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateDelivered}" title="#{bundle.EditCustomerOrderTitle_dateDelivered}"  showOn="button"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerOrderLabel_dateReceived}" for="dateReceived" />
+                                <p:calendar id="dateReceived" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateReceived}" title="#{bundle.EditCustomerOrderTitle_dateReceived}"  showOn="button"/>
+
+                                <p:outputLabel value="#{bundle.EditCustomerOrderLabel_customerId}" for="customerId" />
+                                <p:selectOneMenu id="customerId" value="#{customerOrderController.selected.customerId}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_customerId}" converter="customerConverter">
+                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                    <f:selectItems value="#{customerController.items}"
+                                                   var="customerIdItem"
+                                                   itemValue="#{customerIdItem}"
+                                                   itemLabel="#{customerIdItem.id.toString()}"
+                                                   />
+
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{customerOrderController.save}" value="#{bundle.Save}" update="display,:adminTabView:CustomerOrderListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,CustomerOrderEditDialog);"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="CustomerOrderEditDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+                <p:dialog id="CustomerOrderCreateDlg" widgetVar="CustomerOrderCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateCustomerOrderTitle}" closeOnEscape="true">
+
+                    <h:form id="CustomerOrderCreateForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2">
+
+                                <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_amount}" for="amount" />
+                                <p:inputText id="amount" value="#{customerOrderController.selected.amount}" title="#{bundle.CreateCustomerOrderTitle_amount}" required="true" requiredMessage="#{bundle.CreateCustomerOrderRequiredMessage_amount}"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_dateCreated}" for="dateCreated" />
+                                <p:calendar id="dateCreated" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateCreated}" title="#{bundle.EditCustomerOrderTitle_dateCreated}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_dateCreated}" showOn="button"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_confirmationNumber}" for="confirmationNumber" />
+                                <p:inputText id="confirmationNumber" value="#{customerOrderController.selected.confirmationNumber}" title="#{bundle.CreateCustomerOrderTitle_confirmationNumber}" required="true" requiredMessage="#{bundle.CreateCustomerOrderRequiredMessage_confirmationNumber}"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_dateDelivered}" for="dateDelivered" />
+                                <p:calendar id="dateDelivered" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateDelivered}" title="#{bundle.EditCustomerOrderTitle_dateDelivered}"  showOn="button"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_dateReceived}" for="dateReceived" />
+                                <p:calendar id="dateReceived" pattern="MM/dd/yyyy HH:mm:ss" value="#{customerOrderController.selected.dateReceived}" title="#{bundle.EditCustomerOrderTitle_dateReceived}"  showOn="button"/>
+
+                                <p:outputLabel value="#{bundle.CreateCustomerOrderLabel_customerId}" for="customerId" />
+                                <p:selectOneMenu id="customerId" value="#{customerOrderController.selected.customerId}" required="true" requiredMessage="#{bundle.EditCustomerOrderRequiredMessage_customerId}" converter="customerConverter">
+                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                    <f:selectItems value="#{customerController.items}"
+                                                   var="customerIdItem"
+                                                   itemValue="#{customerIdItem}"
+                                                   itemLabel="#{customerIdItem.id.toString()}"
+                                                   />
+
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{customerOrderController.saveNew}" value="#{bundle.Save}" update="display,:adminTabView:CustomerOrderListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,CustomerOrderCreateDialog);"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="CustomerOrderCreateDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+            </p:tab>
+            <p:tab id="OrderedProductsTab" title="Ordered Products Table">
+                <h:form id="OrderedProductListForm">
+
+                    <p:panel header="#{bundle.ListOrderedProductTitle}">
+
+                        <p:dataTable id="datalist" value="#{orderedProductController.items}" var="item"
+                                     selectionMode="single" selection="#{orderedProductController.selected}"
+                                     rowKey="#{item.orderedProductPK}"
+                                     paginator="true"
+                                     rows="20"
+                                     rowsPerPageTemplate="10,20,30"
+                                     >
+
+                            <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                            <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                            <p:column sortBy="#{item.qty}" filterBy="#{item.qty}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListOrderedProductTitle_qty}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.qty}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.eggQty}" filterBy="#{item.eggQty}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListOrderedProductTitle_eggQty}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.eggQty}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.cheeseQty}" filterBy="#{item.cheeseQty}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListOrderedProductTitle_cheeseQty}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.cheeseQty}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.eggCheeseQty}" filterBy="#{item.eggCheeseQty}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListOrderedProductTitle_eggCheeseQty}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.eggCheeseQty}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.product.name}" filterBy="#{item.product.name}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListOrderedProductTitle_product}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.product.name}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.customerOrder.id}" filterBy="#{item.customerOrder.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListOrderedProductTitle_customerOrder}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.customerOrder.id}"/>
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:outputPanel styleClass="footer-section">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{orderedProductController.prepareCreate}" update=":adminTabView:OrderedProductCreateForm" oncomplete="OrderedProductCreateDialog.show()"/>
+                                    <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":adminTabView:OrderedProductViewForm" oncomplete="OrderedProductViewDialog.show()" disabled="#{empty orderedProductController.selected}"/>
+                                    <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":adminTabView:OrderedProductEditForm" oncomplete="OrderedProductEditDialog.show()" disabled="#{empty orderedProductController.selected}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{orderedProductController.delete}" update=":growl,datalist" disabled="#{empty orderedProductController.selected}"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                        </p:dataTable>
+
+                    </p:panel>
+
+                </h:form>
+                <p:dialog id="OrderedProductViewDlg" widgetVar="OrderedProductViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewOrderedProductTitle}" closeOnEscape="true">
+
+                    <h:form id="OrderedProductViewForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2" rendered="#{orderedProductController.selected != null}">
+
+                                <h:outputText value="#{bundle.ViewOrderedProductLabel_qty}"/>
+                                <h:outputText value="#{orderedProductController.selected.qty}" title="#{bundle.ViewOrderedProductTitle_qty}"/>
+
+                                <h:outputText value="#{bundle.ViewOrderedProductLabel_eggQty}"/>
+                                <h:outputText value="#{orderedProductController.selected.eggQty}" title="#{bundle.ViewOrderedProductTitle_eggQty}"/>
+
+                                <h:outputText value="#{bundle.ViewOrderedProductLabel_cheeseQty}"/>
+                                <h:outputText value="#{orderedProductController.selected.cheeseQty}" title="#{bundle.ViewOrderedProductTitle_cheeseQty}"/>
+
+                                <h:outputText value="#{bundle.ViewOrderedProductLabel_eggCheeseQty}"/>
+                                <h:outputText value="#{orderedProductController.selected.eggCheeseQty}" title="#{bundle.ViewOrderedProductTitle_eggCheeseQty}"/>
+
+                                <h:outputText value="#{bundle.ViewOrderedProductLabel_product}"/>
+                                <h:outputText value="#{orderedProductController.selected.product.name}"/>
+
+                                <h:outputText value="#{bundle.ViewOrderedProductLabel_customerOrder}"/>
+                                <h:outputText value="#{orderedProductController.selected.customerOrder.id}"/>
+                            </p:panelGrid>
+                            <p:commandButton value="#{bundle.Close}" onclick="OrderedProductViewDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+                <p:dialog id="OrderedProductEditDlg" widgetVar="OrderedProductEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditOrderedProductTitle}" closeOnEscape="true">
+
+                    <h:form id="OrderedProductEditForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid  columns="2" rendered="#{orderedProductController.selected != null}">
+
+                                <p:outputLabel value="#{bundle.EditOrderedProductLabel_qty}" for="qty" />
+                                <p:inputText id="qty" value="#{orderedProductController.selected.qty}" title="#{bundle.EditOrderedProductTitle_qty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_qty}"/>
+
+                                <p:outputLabel value="#{bundle.EditOrderedProductLabel_eggQty}" for="eggQty" />
+                                <p:inputText id="eggQty" value="#{orderedProductController.selected.eggQty}" title="#{bundle.EditOrderedProductTitle_eggQty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_eggQty}"/>
+
+                                <p:outputLabel value="#{bundle.EditOrderedProductLabel_cheeseQty}" for="cheeseQty" />
+                                <p:inputText id="cheeseQty" value="#{orderedProductController.selected.cheeseQty}" title="#{bundle.EditOrderedProductTitle_cheeseQty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_cheeseQty}"/>
+
+                                <p:outputLabel value="#{bundle.EditOrderedProductLabel_eggCheeseQty}" for="eggCheeseQty" />
+                                <p:inputText id="eggCheeseQty" value="#{orderedProductController.selected.eggCheeseQty}" title="#{bundle.EditOrderedProductTitle_eggCheeseQty}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_eggCheeseQty}"/>
+
+                                <h:outputLabel value="#{bundle.EditOrderedProductLabel_product}" for="product" />
+                                <h:outputText id="product" value="#{orderedProductController.selected.product}" />
+
+                                <h:outputLabel value="#{bundle.EditOrderedProductLabel_customerOrder}" for="customerOrder" />
+                                <h:outputText id="customerOrder" value="#{orderedProductController.selected.customerOrder}" />
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{orderedProductController.save}" value="#{bundle.Save}" update="display,:adminTabView:OrderedProductListForm:datalist,:growl" oncomplete="OrderedProductEditDialog.hide()"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="OrderedProductEditDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+                <p:dialog id="OrderedProductCreateDlg" widgetVar="OrderedProductCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateOrderedProductTitle}" closeOnEscape="true">
+
+                    <h:form id="OrderedProductCreateForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2">
+
+                                <p:outputLabel value="#{bundle.CreateOrderedProductLabel_qty}" for="qty" />
+                                <p:inputText id="qty" value="#{orderedProductController.selected.qty}" title="#{bundle.CreateOrderedProductTitle_qty}" required="true" requiredMessage="#{bundle.CreateOrderedProductRequiredMessage_qty}"/>
+
+                                <p:outputLabel value="#{bundle.CreateOrderedProductLabel_eggQty}" for="eggQty" />
+                                <p:inputText id="eggQty" value="#{orderedProductController.selected.eggQty}" title="#{bundle.CreateOrderedProductTitle_eggQty}" required="true" requiredMessage="#{bundle.CreateOrderedProductRequiredMessage_eggQty}"/>
+
+                                <p:outputLabel value="#{bundle.CreateOrderedProductLabel_cheeseQty}" for="cheeseQty" />
+                                <p:inputText id="cheeseQty" value="#{orderedProductController.selected.cheeseQty}" title="#{bundle.CreateOrderedProductTitle_cheeseQty}" required="true" requiredMessage="#{bundle.CreateOrderedProductRequiredMessage_cheeseQty}"/>
+
+                                <p:outputLabel value="#{bundle.CreateOrderedProductLabel_eggCheeseQty}" for="eggCheeseQty" />
+                                <p:inputText id="eggCheeseQty" value="#{orderedProductController.selected.eggCheeseQty}" title="#{bundle.CreateOrderedProductTitle_eggCheeseQty}" required="true" requiredMessage="#{bundle.CreateOrderedProductRequiredMessage_eggCheeseQty}"/>
+
+                                <p:outputLabel value="#{bundle.CreateOrderedProductLabel_product}" for="product" />
+                                <p:selectOneMenu id="product" value="#{orderedProductController.selected.product}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_product}" converter="productConverter">
+                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                    <f:selectItems value="#{productController.items}"
+                                                   var="productItem"
+                                                   itemValue="#{productItem}"
+                                                   itemLabel="#{productItem.name.toString()}"
+                                                   />
+
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="#{bundle.CreateOrderedProductLabel_customerOrder}" for="customerOrder" />
+                                <p:selectOneMenu id="customerOrder" value="#{orderedProductController.selected.customerOrder}" required="true" requiredMessage="#{bundle.EditOrderedProductRequiredMessage_customerOrder}" converter="customerOrderConverter">
+                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                                    <f:selectItems value="#{customerOrderController.items}"
+                                                   var="customerOrderItem"
+                                                   itemValue="#{customerOrderItem}"
+                                                   itemLabel="#{customerOrderItem.id.toString()}"
+                                                   />
+
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{orderedProductController.saveNew}" value="#{bundle.Save}" update="display,:adminTabView:OrderedProductListForm:datalist,:growl" oncomplete="OrderedProductCreateDialog.hide()"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="OrderedProductCreateDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+            </p:tab>
+            <p:tab id="ProductsTab" title="Products Table">
+                <h:form id="ProductListForm">
+
+                    <p:panel header="#{bundle.ListProductTitle}">
+
+                        <p:dataTable id="datalist" value="#{productController.items}" var="item"
+                                     selectionMode="single" selection="#{productController.selected}"
+                                     rowKey="#{item.id}"
+                                     paginator="true"
+                                     rows="20"
+                                     rowsPerPageTemplate="10,20,30"
+                                     >
+
+                            <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                            <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                            <p:column sortBy="#{item.id}" filterBy="#{item.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_id}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.name}" filterBy="#{item.name}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_name}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.name}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.description}" filterBy="#{item.description}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_description}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.description}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.price}" filterBy="#{item.price}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_price}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.price}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.eggPrice}" filterBy="#{item.eggPrice}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_eggPrice}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.eggPrice}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.cheesePrice}" filterBy="#{item.cheesePrice}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_cheesePrice}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.cheesePrice}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.lastUpdate}" filterBy="#{item.lastUpdate}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.ListProductTitle_lastUpdate}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.lastUpdate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:outputPanel styleClass="footer-section">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{productController.prepareCreate}" update=":adminTabView:ProductCreateForm" oncomplete="ProductCreateDialog.show()"/>
+                                    <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":adminTabView:ProductViewForm" oncomplete="ProductViewDialog.show()" disabled="#{empty productController.selected}"/>
+                                    <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":adminTabView:ProductEditForm" oncomplete="ProductEditDialog.show()" disabled="#{empty productController.selected}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productController.delete}" update=":growl,datalist" disabled="#{empty productController.selected}"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                        </p:dataTable>
+
+                    </p:panel>
+
+                </h:form>
+                <p:dialog id="ProductViewDlg" widgetVar="ProductViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewProductTitle}" closeOnEscape="true">
+
+                    <h:form id="ProductViewForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2" rendered="#{productController.selected != null}">
+
+                                <h:outputText value="#{bundle.ViewProductLabel_id}"/>
+                                <h:outputText value="#{productController.selected.id}" title="#{bundle.ViewProductTitle_id}"/>
+
+                                <h:outputText value="#{bundle.ViewProductLabel_name}"/>
+                                <h:outputText value="#{productController.selected.name}" title="#{bundle.ViewProductTitle_name}"/>
+
+                                <h:outputText value="#{bundle.ViewProductLabel_description}"/>
+                                <h:outputText value="#{productController.selected.description}" title="#{bundle.ViewProductTitle_description}"/>
+
+                                <h:outputText value="#{bundle.ViewProductLabel_price}"/>
+                                <h:outputText value="#{productController.selected.price}" title="#{bundle.ViewProductTitle_price}"/>
+
+                                <h:outputText value="#{bundle.ViewProductLabel_eggPrice}"/>
+                                <h:outputText value="#{productController.selected.eggPrice}" title="#{bundle.ViewProductTitle_eggPrice}"/>
+
+                                <h:outputText value="#{bundle.ViewProductLabel_cheesePrice}"/>
+                                <h:outputText value="#{productController.selected.cheesePrice}" title="#{bundle.ViewProductTitle_cheesePrice}"/>
+
+                                <h:outputText value="#{bundle.ViewProductLabel_lastUpdate}"/>
+                                <h:outputText value="#{productController.selected.lastUpdate}" title="#{bundle.ViewProductTitle_lastUpdate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:panelGrid>
+                            <p:commandButton value="#{bundle.Close}" onclick="ProductViewDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+                <p:dialog id="ProductEditDlg" widgetVar="ProductEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditProductTitle}" closeOnEscape="true">
+
+                    <h:form id="ProductEditForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid  columns="2" rendered="#{productController.selected != null}">
+
+                                <h:outputLabel value="#{bundle.EditProductLabel_id}" for="id" />
+                                <h:outputText id="id" value="#{productController.selected.id}" />
+
+                                <p:outputLabel value="#{bundle.EditProductLabel_name}" for="name" />
+                                <p:inputText id="name" value="#{productController.selected.name}" title="#{bundle.EditProductTitle_name}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_name}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.EditProductLabel_description}" for="description" />
+                                <p:inputTextarea id="description" value="#{productController.selected.description}" title="#{bundle.EditProductTitle_description}" autoResize="true" cols="30" maxlength="255"/>
+
+                                <p:outputLabel value="#{bundle.EditProductLabel_price}" for="price" />
+                                <p:inputText id="price" value="#{productController.selected.price}" title="#{bundle.EditProductTitle_price}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_price}"/>
+
+                                <p:outputLabel value="#{bundle.EditProductLabel_eggPrice}" for="eggPrice" />
+                                <p:inputText id="eggPrice" value="#{productController.selected.eggPrice}" title="#{bundle.EditProductTitle_eggPrice}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_eggPrice}"/>
+
+                                <p:outputLabel value="#{bundle.EditProductLabel_cheesePrice}" for="cheesePrice" />
+                                <p:inputText id="cheesePrice" value="#{productController.selected.cheesePrice}" title="#{bundle.EditProductTitle_cheesePrice}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_cheesePrice}"/>
+
+                                <p:outputLabel value="#{bundle.EditProductLabel_lastUpdate}" for="lastUpdate" />
+                                <p:calendar id="lastUpdate" pattern="MM/dd/yyyy HH:mm:ss" value="#{productController.selected.lastUpdate}" title="#{bundle.EditProductTitle_lastUpdate}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_lastUpdate}" showOn="button"/>
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{productController.save}" value="#{bundle.Save}" update="display,:adminTabView:ProductListForm:datalist,:growl" oncomplete="ProductEditDialog.hide()"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="ProductEditDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+                <p:dialog id="ProductCreateDlg" widgetVar="ProductCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateProductTitle}" closeOnEscape="true">
+
+                    <h:form id="ProductCreateForm">
+
+                        <h:panelGroup id="display">
+                            <p:panelGrid columns="2">
+
+                                <p:outputLabel value="#{bundle.CreateProductLabel_name}" for="name" />
+                                <p:inputText id="name" value="#{productController.selected.name}" title="#{bundle.CreateProductTitle_name}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_name}" size="45" maxlength="45"/>
+
+                                <p:outputLabel value="#{bundle.CreateProductLabel_description}" for="description" />
+                                <p:inputTextarea id="description" value="#{productController.selected.description}" title="#{bundle.CreateProductTitle_description}" autoResize="true" cols="30" maxlength="255"/>
+
+                                <p:outputLabel value="#{bundle.CreateProductLabel_price}" for="price" />
+                                <p:inputText id="price" value="#{productController.selected.price}" title="#{bundle.CreateProductTitle_price}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_price}"/>
+
+                                <p:outputLabel value="#{bundle.CreateProductLabel_eggPrice}" for="eggPrice" />
+                                <p:inputText id="eggPrice" value="#{productController.selected.eggPrice}" title="#{bundle.CreateProductTitle_eggPrice}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_eggPrice}"/>
+
+                                <p:outputLabel value="#{bundle.CreateProductLabel_cheesePrice}" for="cheesePrice" />
+                                <p:inputText id="cheesePrice" value="#{productController.selected.cheesePrice}" title="#{bundle.CreateProductTitle_cheesePrice}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_cheesePrice}"/>
+
+                                <p:outputLabel value="#{bundle.CreateProductLabel_lastUpdate}" for="lastUpdate" />
+                                <p:calendar id="lastUpdate" pattern="MM/dd/yyyy HH:mm:ss" value="#{productController.selected.lastUpdate}" title="#{bundle.EditProductTitle_lastUpdate}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_lastUpdate}" showOn="button"/>
+                            </p:panelGrid>
+                            <p:commandButton actionListener="#{productController.saveNew}" value="#{bundle.Save}" update="display,:adminTabView:ProductListForm:datalist,:growl" oncomplete="ProductCreateDialog.hide()"/>
+                            <p:commandButton value="#{bundle.Cancel}" onclick="ProductCreateDialog.hide()"/>
+                        </h:panelGroup>
+
+                    </h:form>
+
+                </p:dialog>
+            </p:tab>
+        </p:tabView>
+    </ui:define>
+</ui:composition>

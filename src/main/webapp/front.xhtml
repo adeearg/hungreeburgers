@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <h:outputStylesheet library="css" name="pfcrud.css"/>
+            <h:outputScript library="scripts" name="pfcrud.js"/>
+            <title>HUNGREE BURGERS online ordering</title>
+        </h:head>
+        <h:body>
+            <h:outputStylesheet library="css" name="front.css"/>
+            <p:layout id="main" fullPage="true">
+                <p:layoutUnit id="mainWest" position="west" size="240">
+                    <p:layout id="west">
+                        <p:layoutUnit id="mainWestCenter" position="center">
+                            <p:graphicImage id="logo" value="#{resource['images:hungreeburgers_logo.jpg']}" width="100%"/>
+                            <p:panel id="cartLeft" styleClass="leftPanel" header="Your Order">
+                                <ui:repeat value="${frontBean.customerCart}" var="leftCart">
+                                    <p:panelGrid columnClasses="colProd, colQty, colPrice" styleClass="noBorders" columns="3">
+                                        <p:outputLabel rendered="${leftCart.qty > 0}" value="(${leftCart.product.id})"/>
+                                        <p:outputLabel rendered="${leftCart.qty > 0}" value="${leftCart.qty}"/>
+                                        <p:outputLabel rendered="${leftCart.qty > 0}" value="${leftCart.qty * leftCart.product.price}">
+                                            <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                        </p:outputLabel>
+                                        <p:outputLabel rendered="${leftCart.cheeseQty > 0}" value="(${leftCart.product.id}) +cheese"/>
+                                        <p:outputLabel rendered="${leftCart.cheeseQty > 0}" value="${leftCart.cheeseQty}"/>
+                                        <p:outputLabel rendered="${leftCart.cheeseQty > 0}" value="${leftCart.cheeseQty * (leftCart.product.price +
+                                                                   leftCart.product.cheesePrice)}">
+                                            <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                        </p:outputLabel>
+                                        <p:outputLabel rendered="${leftCart.eggQty > 0}" value="(${leftCart.product.id}) +egg"/>
+                                        <p:outputLabel rendered="${leftCart.eggQty > 0}" value="${leftCart.eggQty}"/>
+                                        <p:outputLabel rendered="${leftCart.eggQty > 0}" value="${leftCart.eggQty * (leftCart.product.price +
+                                                                   leftCart.product.eggPrice)}">
+                                            <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                        </p:outputLabel>
+                                        <p:outputLabel rendered="${leftCart.eggCheeseQty > 0}" value="(${leftCart.product.id}) +cheese+egg"/>
+                                        <p:outputLabel rendered="${leftCart.eggCheeseQty > 0}" value="${leftCart.eggCheeseQty}"/>
+                                        <p:outputLabel rendered="${leftCart.eggCheeseQty > 0}" value="${leftCart.eggCheeseQty * (leftCart.product.price +
+                                                                   leftCart.product.cheesePrice +
+                                                                   leftCart.product.eggPrice)}">
+                                            <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                        </p:outputLabel>
+                                    </p:panelGrid>
+                                </ui:repeat>
+                                <br />
+                                <p:panelGrid columns="3" columnClasses="colProd, colQty, colPrice" styleClass="noBorders" style="font-weight: bolder;">
+                                    <p:outputLabel value="Total"/>
+                                    <p:outputLabel value="${frontBean.cartSumItems}"/>
+                                    <p:outputPanel>
+                                        <p:outputLabel value="&#x20B1;"/>
+                                        <p:outputLabel value="${frontBean.cartTotal}">
+                                            <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                        </p:outputLabel>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:layoutUnit>
+                        <p:layoutUnit id="mainWestSouth" position="south" style="text-align: center;">
+                            <p:panel id="bizInfo" styleClass="leftPanel" header="Contact">
+                                <h2>Contact Info</h2>
+                            </p:panel>
+                            <p:panel>
+                                <p:outputLabel id="copyright_text" value="&copy; 2014 HungreeBurgers"/>
+                                <br />
+                                <p:outputLabel id="developer_text" value="Developed by ">
+                                    <h:outputLink value="mailto:adeegarcia@gmail.com">
+                                        <p:outputLabel value="Alex Garcia"/>
+                                    </h:outputLink>
+                                </p:outputLabel>
+                            </p:panel>
+                        </p:layoutUnit>
+                    </p:layout>
+                </p:layoutUnit>
+                <h:form>
+                    <p:layoutUnit id="mainCenter" position="center">
+                        <p:layout id="center" >
+                            <p:layoutUnit id="mainCenterCenter" position="center">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:dataGrid id="orderPanelGrid" value="#{frontBean.customerCart}" var="cart" columns="3">
+                                    <p:panel styleClass="productBox">
+                                        <span class="productLabelText">(${cart.product.id}) ${cart.product.name}</span> -  &#x20B1; ${cart.product.price}
+                                        <br/>
+                                        <span class="productDescriptionText">${cart.product.description}</span>
+                                        <br/>
+                                        <p:graphicImage styleClass="productImage" value="${initParam.productImagePath}${cart.product.name}.jpg"/>
+                                        <br/>
+                                        <p:panelGrid styleClass="noBorders qty" columns="4">
+                                            <p:outputLabel for="basic" value="Basic"/>
+                                            <p:spinner id="basic" min="0" max="99" maxlength="2" size="2" value="#{cart.qty}">
+                                                <p:ajax event="valueChange" update=":cartLeft"/>
+                                            </p:spinner>
+                                            <p:outputLabel for="egg" value="+egg"/>
+                                            <p:spinner id="egg" min="0" max="99" maxlength="2" size="2" value="#{cart.eggQty}">
+                                                <p:ajax event="valueChange" update=":cartLeft"/>
+                                            </p:spinner>
+                                            <p:outputLabel for="cheese" value="+cheese"/>
+                                            <p:spinner id="cheese" min="0" max="99" maxlength="2" size="2" value="#{cart.cheeseQty}">
+                                                <p:ajax event="valueChange" update=":cartLeft"/>
+                                            </p:spinner>
+                                            <p:outputLabel for="cheeseegg" value="+cheese +egg"/>
+                                            <p:spinner id="cheeseegg" min="0" max="99" maxlength="2" size="2" value="#{cart.eggCheeseQty}">
+                                                <p:ajax event="valueChange" update=":cartLeft"/>
+                                            </p:spinner>
+                                        </p:panelGrid>
+                                    </p:panel>
+                                </p:dataGrid>
+                            </p:layoutUnit>
+                            <p:layoutUnit id="mainCenterSouth" position="south" size="155">
+                                <p:layout id="centerSouth">
+                                    <p:layoutUnit id="mainCenterSouthCenter" position="center">
+                                        <p:panelGrid id="customerPanelGrid" styleClass="noBorders" columns="4">
+                                            <p:outputLabel for="custNick" value="uNick Name"/>
+                                            <p:inputText id="custNick" value="#{frontBean.customer.nick}" maxlength="10" size="10" tabindex="93">
+                                                <p:ajax event="valueChange" update="customerPanelGrid" listener="#{frontBean.handleNickChange()}"/>
+                                            </p:inputText>
+                                            <p:outputLabel for="custAdd1" value="Address"/>
+                                            <p:inputText id="custAdd1" value="#{frontBean.customer.address1}" maxlength="45" size="40" tabindex="97"
+                                                         disabled="${frontBean.customerExisting || frontBean.customer.nick.trim().length() == 0}"/>
+                                            <p:outputLabel for="custFirstName" value="First Name"/>
+                                            <p:inputText id="custFirstName" value="#{frontBean.customer.firstName}" maxlength="25" size="25" tabindex="94"
+                                                         disabled="${frontBean.customerExisting || frontBean.customer.nick.trim().length() == 0}"/>
+                                            <p:outputLabel for="custAdd2" value=" "/>
+                                            <p:inputText id="custAdd2" value="#{frontBean.customer.address2}" maxlength="45" size="40" tabindex="98"
+                                                         disabled="${frontBean.customerExisting || frontBean.customer.nick.trim().length() == 0}"/>
+                                            <p:outputLabel for="custLastName" value="Last Name"/>
+                                            <p:inputText id="custLastName" value="#{frontBean.customer.lastName}" maxlength="25" size="25" tabindex="95"
+                                                         disabled="${frontBean.customerExisting || frontBean.customer.nick.trim().length() == 0}"/>
+                                            <p:outputLabel for="custPhone" value="Landline Phone"/>
+                                            <p:inputText id="custPhone" value="#{frontBean.customer.phone}" maxlength="20" size="20" tabindex="99"
+                                                         disabled="${frontBean.customerExisting || frontBean.customer.nick.trim().length() == 0}"/>
+                                            <p:outputLabel for="custEmail" value="eMail"/>
+                                            <p:inputText id="custEmail" value="#{frontBean.customer.email}" maxlength="45" size="40" tabindex="96"
+                                                         disabled="${frontBean.customerExisting || frontBean.customer.nick.trim().length() == 0}"/>
+                                        </p:panelGrid>
+                                    </p:layoutUnit>
+                                    <p:layoutUnit id="mainCenterSouthEast" style="text-align: center;" position="east" size="200">
+                                        <br />
+                                        <p:commandButton icon="ui-icon-arrowthick-1-n" id="postButton" value="Send Order" style="height: 50px;"
+                                                         update=":ConfirmDialogForm" oncomplete="ConfirmDialog.show();" tabindex="100">
+                                        </p:commandButton>
+                                        <br /><br /><br />
+                                        <p:clock pattern="MM/dd/yy hh:mm:ssa"/>
+                                    </p:layoutUnit>
+                                </p:layout>
+                            </p:layoutUnit>
+                        </p:layout>
+                    </p:layoutUnit>
+                </h:form>
+            </p:layout>
+            <p:dialog id="dialogConfirm" widgetVar="ConfirmDialog" modal="true" resizable="false" appendTo="@(body)"
+                      header="Confirmation" closeOnEscape="true">
+                <h:form id="ConfirmDialogForm">
+                    <p style="text-align: center"><strong>Please review your order. Click Yes to send or No to go back.</strong></p>
+                    <p:panel id="cartConfirm" header="Order Details">
+                        <ui:repeat value="${frontBean.customerCart}" var="confCart">
+                            <p:panelGrid columnClasses="colProdConfirm, colQty, colPrice" styleClass="noBorders" columns="3">
+                                <p:outputLabel rendered="${confCart.qty > 0}" value="(${confCart.product.id}) ${confCart.product.name}"/>
+                                <p:outputLabel rendered="${confCart.qty > 0}" value="${confCart.qty}"/>
+                                <p:outputLabel rendered="${confCart.qty > 0}" value="${confCart.qty * confCart.product.price}">
+                                    <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                </p:outputLabel>
+                                <p:outputLabel rendered="${confCart.cheeseQty > 0}"
+                                               value="(${confCart.product.id}) ${confCart.product.name} +cheese"/>
+                                <p:outputLabel rendered="${confCart.cheeseQty > 0}" value="${confCart.cheeseQty}"/>
+                                <p:outputLabel rendered="${confCart.cheeseQty > 0}" value="${confCart.cheeseQty *
+                                                           (confCart.product.price + confCart.product.cheesePrice)}">
+                                    <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                </p:outputLabel>
+                                <p:outputLabel rendered="${confCart.eggQty > 0}"
+                                               value="(${confCart.product.id}) ${confCart.product.name} +egg"/>
+                                <p:outputLabel rendered="${confCart.eggQty > 0}" value="${confCart.eggQty}"/>
+                                <p:outputLabel rendered="${confCart.eggQty > 0}" value="${confCart.eggQty *
+                                                           (confCart.product.price + confCart.product.eggPrice)}">
+                                    <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                </p:outputLabel>
+                                <p:outputLabel rendered="${confCart.eggCheeseQty > 0}"
+                                               value="(${confCart.product.id}) ${confCart.product.name} +cheese+egg"/>
+                                <p:outputLabel rendered="${confCart.eggCheeseQty > 0}" value="${confCart.eggCheeseQty}"/>
+                                <p:outputLabel rendered="${confCart.eggCheeseQty > 0}" value="${confCart.eggCheeseQty *
+                                                           (confCart.product.price +
+                                                           confCart.product.cheesePrice +
+                                                           confCart.product.eggPrice)}">
+                                    <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                </p:outputLabel>
+                            </p:panelGrid>
+                        </ui:repeat>
+                        <br />
+                        <p:panelGrid columns="3" columnClasses="colProdConfirm, colQty, colPrice" styleClass="noBorders" style="font-weight: bolder;">
+                            <p:outputLabel value="Total"/>
+                            <p:outputLabel value="${frontBean.cartSumItems}"/>
+                            <p:outputPanel>
+                                <p:outputLabel value="&#x20B1;"/>
+                                <p:outputLabel value="${frontBean.cartTotal}">
+                                    <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                </p:outputLabel>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel id="custConfirm" header="Customer Details">
+                        <p:panelGrid styleClass="noBorders" columns="2">
+                            <p:outputLabel value="uNick Name"/>
+                            <p:outputLabel value="${frontBean.customer.nick}" styleClass="confCust"/>
+                            <p:outputLabel value="First Name"/>
+                            <p:outputLabel value="${frontBean.customer.firstName}" styleClass="confCust"/>
+                            <p:outputLabel value="Last Name"/>
+                            <p:outputLabel value="${frontBean.customer.lastName}" styleClass="confCust"/>
+                            <p:outputLabel value="eMail"/>
+                            <p:outputLabel value="${frontBean.customer.email}" styleClass="confCust"/>
+                            <p:outputLabel value="Address"/>
+                            <p:outputLabel value="${frontBean.customer.address1}" styleClass="confCust"/>
+                            <p:outputLabel value=" "/>
+                            <p:outputLabel value="${frontBean.customer.address2}" styleClass="confCust"/>
+                            <p:outputLabel value="Landline Phone"/>
+                            <p:outputLabel value="${frontBean.customer.phone}" styleClass="confCust"/>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="Send Order" style="text-align: center;">
+                        <p:commandButton actionListener="#{frontBean.postOrder()}" value="Yes" style="margin-right: 20px;" icon="ui-icon-arrowthick-1-n"
+                                         oncomplete="ConfirmDialog.hide(); ThanksDialog.show();"/>
+                        <p:commandButton value="No" onclick="ConfirmDialog.hide();" style="margin-left: 20px;" icon="ui-icon-arrowthick-1-s"/>
+                    </p:panel>
+                </h:form>
+            </p:dialog>
+            <p:dialog id="dialogThanks" widgetVar="ThanksDialog" modal="true" resizable="false" style="text-align: center;"
+                      appendTo="@(body)" header="Thank You" closeOnEscape="true">
+                <p:panel>
+                    <p>Your order was accepted. Please wait for the confirmation call.</p>
+                    <p>Thank you for your patronage.</p>
+                </p:panel>
+                <br />
+                <h:form id="ThanksDialogForm">
+                    <p:commandButton value="OK" icon="ui-icon-check"
+                                     oncomplete="ThanksDialog.hide(); document.location.reload(true);"/>
+                </h:form>
+            </p:dialog>
+            <p:idleMonitor timeout="600000" onidle="IdleDialog.show();" onactive="IdleDialog.hide();"/>
+            <p:dialog widgetVar="IdleDialog" appendTo="@(body)" header="Inactive" modal="true" resizable="false">
+                <p:panel>
+                    <p:outputLabel value="You've been idle for some time now!"/>
+                </p:panel>
+            </p:dialog>
+        </h:body>
+    </f:view>
+</html>

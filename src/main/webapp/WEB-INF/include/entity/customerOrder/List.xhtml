@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="CustomerOrderListForm">
+
+        <p:panel header="#{bundle.ListCustomerOrderTitle}">
+
+            <p:dataTable id="datalist" value="#{customerOrderController.items}" var="item"
+                         selectionMode="single" selection="#{customerOrderController.selected}"
+                         rowKey="#{item.id}"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30"
+                         >
+
+                <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                <p:column sortBy="#{item.id}" filterBy="#{item.id}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_id}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.id}"/>
+                </p:column>
+                <p:column sortBy="#{item.amount}" filterBy="#{item.amount}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_amount}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.amount}"/>
+                </p:column>
+                <p:column sortBy="#{item.dateCreated}" filterBy="#{item.dateCreated}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_dateCreated}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateCreated}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                <p:column sortBy="#{item.confirmationNumber}" filterBy="#{item.confirmationNumber}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_confirmationNumber}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.confirmationNumber}"/>
+                </p:column>
+                <p:column sortBy="#{item.dateDelivered}" filterBy="#{item.dateDelivered}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_dateDelivered}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateDelivered}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                <p:column sortBy="#{item.dateReceived}" filterBy="#{item.dateReceived}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_dateReceived}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateReceived}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                <p:column sortBy="#{item.customerId.id}" filterBy="#{item.customerId.id}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.ListCustomerOrderTitle_customerId}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.customerId.id}"/>
+                </p:column>
+                <f:facet name="footer">
+                    <div class="footer-section">
+                        <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{customerOrderController.prepareCreate}" update=":CustomerOrderCreateForm" oncomplete="CustomerOrderCreateDialog.show()"/>
+                        <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":CustomerOrderViewForm" oncomplete="CustomerOrderViewDialog.show()" disabled="#{empty customerOrderController.selected}"/>
+                        <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":CustomerOrderEditForm" oncomplete="CustomerOrderEditDialog.show()" disabled="#{empty customerOrderController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{customerOrderController.delete}" update=":growl,datalist" disabled="#{empty customerOrderController.selected}"/>
+                    </div>
+                </f:facet>
+
+            </p:dataTable>
+
+        </p:panel>
+
+    </h:form>
+
+</ui:composition>

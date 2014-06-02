@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="WEB-INF/include/template_monitor.xhtml">
+
+    <ui:define name="title">
+        <h:outputText value="HUNGREE BURGERS - Orders Monitor"/>
+    </ui:define>
+
+    <ui:define id="admin" name="body">
+        <h:outputStylesheet library="css" name="admin.css"/>
+        <p:outputPanel id="ordersPanel">
+            <p:panel id="pendingOrdersPanel" header="Pending Orders" style="float: left; width: 48%">
+                <h:form id="pendingOrdersForm">
+                    <p:dataGrid id="pendingOrdersGrid" columns="1" rows="4" paginator="true" rowsPerPageTemplate="4,8,12" paginatorAlwaysVisible="false"
+                                currentPageReportTemplate="Page {currentPage} of {totalPages}, Orders {startRecord}-{endRecord} of {totalRecords}"
+                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                value="${adminBean.customerOrdersPending}" var="pending">
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="2" style="width: 20em;" styleClass="noBorders">
+                                <p:outputLabel value="${pending.customerId.firstName}"/>
+                                <p:outputLabel value="${pending.customerId.address1}"/>
+                                <p:outputLabel value="${pending.customerId.lastName}"/>
+                                <p:outputLabel value="${pending.customerId.address2}"/>
+                                <p:outputPanel>
+                                    <p:outputLabel value="&#x20B1; "/>
+                                    <p:outputLabel value="${pending.amount}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                </p:outputPanel>
+                                <p:outputLabel value="${pending.customerId.phone}"/>
+                                <p:outputLabel value="${pending.dateCreated}">
+                                    <f:convertDateTime type="both" dateStyle="short" timeStyle="short" timeZone="GMT+08:00"/>
+                                </p:outputLabel>
+                                <p:commandButton value="Deliver" icon="ui-icon-check" oncomplete="location.reload(true);"
+                                                 action="${adminBean.deliver()}"/>
+                            </p:panelGrid>
+                            <ui:repeat value="${pending.orderedProductCollection}" var="pendColl">
+                                <p:panelGrid columnClasses="colProdConfirm, colQty, colPrice" styleClass="noBorders" columns="3">
+                                    <p:outputLabel rendered="${pendColl.qty > 0}" value="(${pendColl.product.id}) ${pendColl.product.name}"/>
+                                    <p:outputLabel rendered="${pendColl.qty > 0}" value="${pendColl.qty}"/>
+                                    <p:outputLabel rendered="${pendColl.qty > 0}" value="${pendColl.qty * pendColl.product.price}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="${pendColl.cheeseQty > 0}" value="(${pendColl.product.id}) ${pendColl.product.name} +cheese"/>
+                                    <p:outputLabel rendered="${pendColl.cheeseQty > 0}" value="${pendColl.cheeseQty}"/>
+                                    <p:outputLabel rendered="${pendColl.cheeseQty > 0}" value="${pendColl.cheeseQty * (pendColl.product.price +
+                                                               pendColl.product.cheesePrice)}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="${pendColl.eggQty > 0}" value="(${pendColl.product.id}) ${pendColl.product.name} +egg"/>
+                                    <p:outputLabel rendered="${pendColl.eggQty > 0}" value="${pendColl.eggQty}"/>
+                                    <p:outputLabel rendered="${pendColl.eggQty > 0}" value="${pendColl.eggQty * (pendColl.product.price +
+                                                               pendColl.product.eggPrice)}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="${pendColl.eggCheeseQty > 0}" value="(${pendColl.product.id}) ${pendColl.product.name} +cheese+egg"/>
+                                    <p:outputLabel rendered="${pendColl.eggCheeseQty > 0}" value="${pendColl.eggCheeseQty}"/>
+                                    <p:outputLabel rendered="${pendColl.eggCheeseQty > 0}" value="${pendColl.eggCheeseQty * (pendColl.product.price +
+                                                               pendColl.product.cheesePrice +
+                                                               pendColl.product.eggPrice)}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                </p:panelGrid>
+                            </ui:repeat>
+                        </p:panelGrid>
+                    </p:dataGrid>
+                </h:form>
+            </p:panel>
+            <p:panel id="inTransitOrdersPanel" header="In-Transit Orders" style="float: right; width: 48%">
+                <h:form id="inTransitOrdersForm">
+                    <p:dataGrid id="inTransitOrdersGrid" columns="1" rows="4" paginator="true" rowsPerPageTemplate="4,8,12" paginatorAlwaysVisible="false"
+                                currentPageReportTemplate="Page {currentPage} of {totalPages}, Orders {startRecord}-{endRecord} of {totalRecords}"
+                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                value="${adminBean.customerOrdersInTransit}" var="inTransit">
+                        <p:panelGrid columns="2">
+                            <p:panelGrid columns="2" style="width: 20em;" styleClass="noBorders">
+                                <p:outputLabel value="${inTransit.customerId.firstName}"/>
+                                <p:outputLabel value="${inTransit.customerId.address1}"/>
+                                <p:outputLabel value="${inTransit.customerId.lastName}"/>
+                                <p:outputLabel value="${inTransit.customerId.address2}"/>
+                                <p:outputPanel>
+                                    <p:outputLabel value="&#x20B1; "/>
+                                    <p:outputLabel value="${inTransit.amount}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                </p:outputPanel>
+                                <p:outputLabel value="${inTransit.customerId.phone}"/>
+                                <p:outputLabel value="${inTransit.dateDelivered}">
+                                    <f:convertDateTime type="both" dateStyle="short" timeStyle="short" timeZone="GMT+08:00"/>
+                                </p:outputLabel>
+                                <p:commandButton value="Done" icon="ui-icon-stop" oncomplete="location.reload(true);"
+                                                 action="${adminBean.done()}"/>
+                            </p:panelGrid>
+                            <ui:repeat value="${inTransit.orderedProductCollection}" var="inTrColl">
+                                <p:panelGrid columnClasses="colProdConfirm, colQty, colPrice" styleClass="noBorders" columns="3">
+                                    <p:outputLabel rendered="${inTrColl.qty > 0}" value="(${inTrColl.product.id}) ${inTrColl.product.name}"/>
+                                    <p:outputLabel rendered="${inTrColl.qty > 0}" value="${inTrColl.qty}"/>
+                                    <p:outputLabel rendered="${inTrColl.qty > 0}" value="${inTrColl.qty * inTrColl.product.price}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="${inTrColl.cheeseQty > 0}" value="(${inTrColl.product.id}) ${inTrColl.product.name} +cheese"/>
+                                    <p:outputLabel rendered="${inTrColl.cheeseQty > 0}" value="${inTrColl.cheeseQty}"/>
+                                    <p:outputLabel rendered="${inTrColl.cheeseQty > 0}" value="${inTrColl.cheeseQty * (inTrColl.product.price +
+                                                               inTrColl.product.cheesePrice)}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="${inTrColl.eggQty > 0}" value="(${inTrColl.product.id}) ${inTrColl.product.name} +egg"/>
+                                    <p:outputLabel rendered="${inTrColl.eggQty > 0}" value="${inTrColl.eggQty}"/>
+                                    <p:outputLabel rendered="${inTrColl.eggQty > 0}" value="${inTrColl.eggQty * (inTrColl.product.price +
+                                                               inTrColl.product.eggPrice)}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="${inTrColl.eggCheeseQty > 0}" value="(${inTrColl.product.id}) ${inTrColl.product.name} +cheese+egg"/>
+                                    <p:outputLabel rendered="${inTrColl.eggCheeseQty > 0}" value="${inTrColl.eggCheeseQty}"/>
+                                    <p:outputLabel rendered="${inTrColl.eggCheeseQty > 0}" value="${inTrColl.eggCheeseQty * (inTrColl.product.price +
+                                                               inTrColl.product.cheesePrice +
+                                                               inTrColl.product.eggPrice)}">
+                                        <f:convertNumber groupingUsed="true" minFractionDigits="2"/>
+                                    </p:outputLabel>
+                                </p:panelGrid>
+                            </ui:repeat>
+                        </p:panelGrid>
+                    </p:dataGrid>
+                </h:form>
+            </p:panel>
+        </p:outputPanel>
+        <h:form>
+            <p:poll interval="60" update=":pendingOrdersForm:pendingOrdersGrid, :inTransitOrdersForm:inTransitOrdersGrid"/>
+        </h:form>
+    </ui:define>
+</ui:composition>

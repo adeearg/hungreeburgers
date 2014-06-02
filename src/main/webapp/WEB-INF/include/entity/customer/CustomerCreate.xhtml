@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CustomerCreateDlg" widgetVar="CustomerCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateCustomerTitle}" closeOnEscape="true">
+
+            <h:form id="CustomerCreateForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid id="customerGrid" columns="2">
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_nick}" for="nick" />
+                        <p:inputText id="nick" value="#{customerController.selected.nick}" title="#{bundle.CreateCustomerTitle_nick}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_nick}" size="10" maxlength="10"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_firstName}" for="firstName" />
+                        <p:inputText id="firstName" value="#{customerController.selected.firstName}" title="#{bundle.CreateCustomerTitle_firstName}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_firstName}" size="25" maxlength="25"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_lastName}" for="lastName" />
+                        <p:inputText id="lastName" value="#{customerController.selected.lastName}" title="#{bundle.CreateCustomerTitle_lastName}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_lastName}" size="25" maxlength="25"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_email}" for="email" />
+                        <p:inputText id="email" value="#{customerController.selected.email}" title="#{bundle.CreateCustomerTitle_email}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_email}" size="45" maxlength="45"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_phone}" for="phone" />
+                        <p:inputText id="phone" value="#{customerController.selected.phone}" title="#{bundle.CreateCustomerTitle_phone}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_phone}" size="20" maxlength="20"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_address1}" for="address1" />
+                        <p:inputText id="address1" value="#{customerController.selected.address1}" title="#{bundle.CreateCustomerTitle_address1}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_address1}" size="45" maxlength="45"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_address2}" for="address2" />
+                        <p:inputText id="address2" value="#{customerController.selected.address2}" title="#{bundle.CreateCustomerTitle_address2}" required="true" requiredMessage="#{bundle.CreateCustomerRequiredMessage_address2}" size="45" maxlength="45"/>
+
+                        <p:outputLabel value="#{bundle.CreateCustomerLabel_ccNumber}" for="ccNumber" />
+                        <p:inputText id="ccNumber" value="#{customerController.selected.ccNumber}" title="#{bundle.CreateCustomerTitle_ccNumber}" size="19" maxlength="19"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{customerController.saveNew}" value="#{bundle.Save}" update="display,:CustomerListForm:datalist,:growl" oncomplete="handleSubmit(xhr,status,args,CustomerCreateDialog);"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="CustomerCreateDialog.hide()"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>
